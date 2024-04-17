@@ -28,7 +28,6 @@ def addTask():
 
 
 def deleteTask():
-    # Ouvre le fichier todo_list.txt en mode lecture et écriture
     with open("todo_list.txt", "r+") as tasks:
         lines = tasks.readlines()
         tasks.seek(0)
@@ -38,7 +37,7 @@ def deleteTask():
 
         new_lines = []
         for line in lines:
-            if line.strip():  # Vérifie si la ligne n'est pas vide
+            if line.strip():  
                 new_lines.append(line.strip())
 
         for i, line in enumerate(new_lines, start=1):
@@ -52,23 +51,48 @@ def deleteTask():
             delete_index = int(delete_num) - 1
             if 0 <= delete_index < len(new_lines):
                 del new_lines[delete_index]
-                # Efface le contenu actuel du fichier
                 tasks.truncate(0)
-                # Replace le curseur d'écriture au début du fichier
                 tasks.seek(0)
-                # Réécrit les tâches restantes dans le fichier
                 for line in new_lines:
                     tasks.write(line + "\n")
             else:
                 print("Invalid task number.")
         else:
             print("Invalid input. Please enter a valid task number.")
+           
+def modifyTask():
+    with open("todo_list.txt", "r+") as tasks:
+        lines = tasks.readlines()
+        tasks.seek(0)
+        title = "Todo list :"
+        separator = "-" * len(title)
+        print("\n", separator, "\n", title, "\n", separator) 
 
+        new_lines = []
+        for line in lines:
+            if line.strip():  
+                new_lines.append(line.strip())
 
+        for i, line in enumerate(new_lines, start=1):
+            print(f"{i}. {line}")
 
+        print("\n")
+        modify_num = input("Choose the number of the task to modify: ")
 
-            
-        
+        if modify_num.isdigit():
+            modify_index = int(modify_num) - 1
+            if 0 <= modify_index < len(new_lines):
+                new_description = input("Enter the new task description: ")
+                new_lines[modify_index] = new_description
+                tasks.truncate(0)
+                tasks.seek(0)
+                for line in new_lines:
+                    tasks.write(line + "\n")
+            else:
+                print("Invalid task number.")
+        else:
+            print("Invalid input. Please enter a valid task number.")
+      
 while True:
     choice = askForChoice()
     
@@ -78,6 +102,8 @@ while True:
         addTask()
     elif choice == "3":
         deleteTask()
+    elif choice == "4":
+        modifyTask()
     elif choice == "5":
         print("Exiting...")
         break
